@@ -8,3 +8,6 @@ A prometheus exporter for a BOSH BME280 sensor, this time, written in go :blue_h
 
 VIN, GND, SCL and SDA are the notations on the sensor board of the GYBME280 sensor.
 
+## Libraries
+
+- switch to https://github.com/tinygo-org/drivers
