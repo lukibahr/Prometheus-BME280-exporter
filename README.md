@@ -8,7 +8,6 @@ A prometheus exporter for a BOSH BME280 sensor, this time, written in go :blue_h
 
 VIN, GND, SCL and SDA are the notations on the sensor board of the GYBME280 sensor.
 
-<<<<<<< HEAD
 ## ToDos
 
 - :x: Implement basic implementation of prometheus exporter 
@@ -18,8 +17,11 @@ VIN, GND, SCL and SDA are the notations on the sensor board of the GYBME280 sens
 - :x: Use [urfave/cli](https://github.com/urfave/cli/blob/master/docs/v2/manual.md) as it is more lightwheight
 - :x: Write tests, of course..
 - :x: populate Inject version of app to api endpoint
-=======
-## Libraries
 
+
+## Libraries
 - switch to https://github.com/tinygo-org/drivers
->>>>>>> 7cacf64003aafe8d41a5ef3a07db7c562c288dfe
+
+- https://github.com/bpicode/fritzctl/wiki/Prometheus-monitoring
+- https://www.digitalocean.com/community/tutorials/using-ldflags-to-set-version-information-for-go-applications
+- https://blog.alexellis.io/golang-writing-unit-tests/
