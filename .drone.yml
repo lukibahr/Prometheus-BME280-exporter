@@ -9,6 +9,7 @@ steps:
   - name: publish
     image: plugins/docker
     settings:
+      repo: lukasbahr/prometheus-bme280-exporter
       tags: "${DRONE_COMMIT_SHA:0:7}"
       # auto_tag: true
       #auto_tag_suffix: linux-amd64
