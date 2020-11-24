@@ -79,6 +79,7 @@ func runRoot(cmd *cobra.Command) error {
 	setLoglevel(conf.Loglevel)
 	http.HandleFunc("/", handlers.IndexHandler)
 	http.HandleFunc("/health", handlers.HealthHandler)
+	http.HandleFunc("/metrics/json", handlers.JsonMetricsHandler)
 	http.Handle("/metrics", promhttp.Handler())
 
 	log.Infof("Running exporter %s on port :%s", version, port)

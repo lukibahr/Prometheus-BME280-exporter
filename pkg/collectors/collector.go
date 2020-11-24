@@ -57,8 +57,8 @@ func (collector *BMECollector) Describe(ch chan<- *prometheus.Desc) {
 //Collect implements required collect function for all prometheus collectors
 func (collector *BMECollector) Collect(ch chan<- prometheus.Metric) {
 	//temporarily used, more a smell than a feature
-	logger.ChangePackageLogLevel("i2c", logger.DebugLevel)
-	logger.ChangePackageLogLevel("bsbmp", logger.DebugLevel)
+	logger.ChangePackageLogLevel("i2c", logger.InfoLevel)
+	logger.ChangePackageLogLevel("bsbmp", logger.InfoLevel)
 
 	hostname, err := os.Hostname()
 	if err != nil {
