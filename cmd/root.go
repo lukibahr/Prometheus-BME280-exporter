@@ -1,6 +1,9 @@
 package cmd
 
 import (
+	"net/http"
+	"os"
+
 	nested "github.com/antonfisher/nested-logrus-formatter"
 	"github.com/lukibahr/Prometheus-BME280-exporter/pkg/collectors"
 	"github.com/lukibahr/Prometheus-BME280-exporter/pkg/config"
@@ -10,8 +13,6 @@ import (
 	"github.com/shiena/ansicolor"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
-	"net/http"
-	"os"
 )
 
 var rootCmd = &cobra.Command{
@@ -26,6 +27,8 @@ var rootCmd = &cobra.Command{
 		return runRoot(cmd)
 	},
 }
+
+var version string
 
 //Execute runs the toor command
 func Execute() {
@@ -78,10 +81,8 @@ func runRoot(cmd *cobra.Command) error {
 	http.HandleFunc("/health", handlers.HealthHandler)
 	http.Handle("/metrics", promhttp.Handler())
 
-	log.Infof("Running exporter on port :%s", port)
+	log.Infof("Running exporter %s on port :%s", version, port)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 	return nil
 
 }
-
-
