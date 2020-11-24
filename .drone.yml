@@ -6,11 +6,6 @@ clone:
   depth: 50
 
 steps:
-  #- name: binary
-  #  image: golang:1.15
-  #  commands:
-  #    - CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -v  -ldflags "-X main.version=${DRONE_COMMIT_SHA:0:7}" -o build/backup-controller
-
   - name: publish
     image: plugins/docker
     settings:

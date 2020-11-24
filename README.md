@@ -10,7 +10,7 @@ VIN, GND, SCL and SDA are the notations on the sensor board of the GYBME280 sens
 
 ## ToDos
 
-- :x: Implement basic implementation of prometheus exporter 
+- :heavy_check_mark: Implement basic implementation of prometheus exporter 
 - :x: Implement ``/-/reload`` route 
 - :x: Implement ``/metrics/json`` route for JSON population
 - :x: Implement ``/healthz`` route for checking if the sensor is available
