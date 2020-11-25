@@ -11,8 +11,8 @@ VIN, GND, SCL and SDA are the notations on the sensor board of the GYBME280 sens
 ## ToDos
 
 - :heavy_check_mark: Implement basic implementation of prometheus exporter 
-- :x: Implement ``/-/reload`` route 
-- :x: Implement ``/metrics/json`` route for JSON population
+- :x: Implement ``/-/reload`` route for reloading configuration
+- :x: Implement ``/metrics/json`` route for JSON population, or use https://github.com/prometheus/prom2json
 - :x: Implement ``/healthz`` route for checking if the sensor is available
 - :x: Use [urfave/cli](https://github.com/urfave/cli/blob/master/docs/v2/manual.md) as it is more lightwheight
 - :x: Write tests, of course..
