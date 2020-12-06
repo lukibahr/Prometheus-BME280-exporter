@@ -13,6 +13,7 @@ func IndexHandler (w http.ResponseWriter, r *http.Request) {
 		  <body>
 		  <h1>BME280 exporter</h1>
           <p>Go to <a href="/metrics">/metrics</a></p>
+		  <p>View repository <a href="https://github.com/lukibahr/Prometheus-BME280-exporter">github.com/lukibahr/Prometheus-BME280-exporter</a></p>
 		  </body>
 		  </html>`))
 }
