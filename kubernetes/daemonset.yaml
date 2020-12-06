@@ -1,0 +1,62 @@
+#
+# This DaemonSet only works on selected nodes
+# use kubectl label nodes denver exporter-bme380/enabled=true to allow the exporter provisioned on the node
+# help see here. https://github.com/KesiSound/BMPDisplay
+
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: bme280-exporter
+  namespace: monitoring
+  labels:
+    app: bme280-exporter
+spec:
+  selector:
+    matchLabels:
+      app: bme280-exporter
+  template:
+    metadata:
+      labels:
+        app: bme280-exporter
+      annotations:
+        prometheus.io/path: /metrics
+        prometheus.io/port: "9123"
+        prometheus.io/scrape: "true"
+    spec:
+      containers:
+      - name: bme280-exporter
+        image: lukasbahr/prometheus-bme280-exporter:74b2a86
+        args: ["--accuracy=ACCURACY_STANDARD", "--port=9123","--loglevel=debug"]
+        env:
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        ports:
+        - name: http
+          containerPort: 9123
+        volumeMounts:
+        - mountPath: /dev/i2c-1
+          name: device
+        securityContext:
+          privileged: true  
+        resources:
+          limits:
+            memory: 200Mi
+          requests:
+            cpu: 100m
+            memory: 200Mi
+        #livenessProbe:
+         # httpGet:
+          #  path: /
+           # port: 9103
+          #initialDelaySeconds: 5
+          #periodSeconds: 5
+      volumes:
+      - name: device
+        hostPath:
+          path: /dev/i2c-1      
+      terminationGracePeriodSeconds: 10
+      nodeSelector:
+        k3s.io/exporter-bme380-enabled: "true"
