@@ -28,8 +28,6 @@ var rootCmd = &cobra.Command{
 	},
 }
 
-var version string
-
 //Execute runs the toor command
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
@@ -78,10 +76,9 @@ func runRoot(cmd *cobra.Command) error {
 	setLoglevel(conf.Loglevel)
 	http.HandleFunc("/", handlers.IndexHandler)
 	http.HandleFunc("/health", handlers.HealthHandler)
-	http.HandleFunc("/metrics/json", handlers.JsonMetricsHandler)
 	http.Handle("/metrics", promhttp.Handler())
 
-	log.Infof("Running exporter %s on port :%s", version, port)
+	log.Infof("Running exporter on port :%s", port)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 	return nil
 
