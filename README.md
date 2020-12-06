@@ -1,6 +1,6 @@
 # Prometheus-BME280-exporter
 
-A prometheus exporter for a BOSH BME280 sensor, this time, written in go :blue_heart:
+A prometheus exporter for a BOSH BME280 sensor, this time, written in go :green_heart:
 
 ## Wiring the sensor
 
@@ -8,20 +8,21 @@ A prometheus exporter for a BOSH BME280 sensor, this time, written in go :blue_h
 
 VIN, GND, SCL and SDA are the notations on the sensor board of the GYBME280 sensor.
 
-## ToDos
+## Running the exporter
 
-- :heavy_check_mark: Implement basic implementation of prometheus exporter 
-- :x: Implement ``/-/reload`` route for reloading configuration
-- :x: Implement ``/metrics/json`` route for JSON population, or use https://github.com/prometheus/prom2json
-- :x: Implement ``/healthz`` route for checking if the sensor is available
-- :x: Use [urfave/cli](https://github.com/urfave/cli/blob/master/docs/v2/manual.md) as it is more lightwheight
-- :x: Write tests, of course..
-- :x: populate Inject version of app to api endpoint
+After you've successfully mounted the sensor, you have to enable the I2C interface. You can either use `sudo raspi-config` or add the following to the `/boot/config.txt
 
+```bash
+pi@raspberrypi ~ $ sudo vim /boot/config.txt`
 
-## Libraries
-- switch to https://github.com/tinygo-org/drivers
+Add to the bottom;
 
-- https://github.com/bpicode/fritzctl/wiki/Prometheus-monitoring
-- https://www.digitalocean.com/community/tutorials/using-ldflags-to-set-version-information-for-go-applications
-- https://blog.alexellis.io/golang-writing-unit-tests/
+dtparam=i2c_arm=on
+dtparam=i2c1=on
+```
+
+A reboot of your Pi is required to take changes effect. Run the exporter with:
+
+`docker run -it -v /dev/i2c-1:/dev/i2c-1 --privileged -p 9123:9123 lukasbahr/prometheus-bme280-exporter:74b2a86 --loglevel=info` 
+
+The privileged mode is currently required to grant access to the i2c device. Not the best solution but ad-hoc the first working one.

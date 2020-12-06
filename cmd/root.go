@@ -56,7 +56,6 @@ func setLoglevel(level string) {
 	} else {
 		log.SetLevel(parsed)
 	}
-
 }
 
 func runRoot(cmd *cobra.Command) error {

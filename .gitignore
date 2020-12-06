@@ -19,3 +19,7 @@ snip.*.md
 .idea/
 *.env
 *.sum
+
+IMPLEMENTATION.md
+
+*.sum
