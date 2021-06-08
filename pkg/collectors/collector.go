@@ -1,12 +1,13 @@
 package collectors
 
 import (
+	"os"
+
 	"github.com/d2r2/go-bsbmp"
 	"github.com/d2r2/go-i2c"
 	"github.com/d2r2/go-logger"
 	"github.com/prometheus/client_golang/prometheus"
 	log "github.com/sirupsen/logrus"
-	"os"
 )
 
 //BMECollector defines the struct for the collector that contains pointers
@@ -57,8 +58,14 @@ func (collector *BMECollector) Describe(ch chan<- *prometheus.Desc) {
 //Collect implements required collect function for all prometheus collectors
 func (collector *BMECollector) Collect(ch chan<- prometheus.Metric) {
 	//temporarily used, more a smell than a feature
-	logger.ChangePackageLogLevel("i2c", logger.InfoLevel)
-	logger.ChangePackageLogLevel("bsbmp", logger.InfoLevel)
+	i2cerr := logger.ChangePackageLogLevel("i2c", logger.InfoLevel)
+	if i2cerr != nil {
+		log.Fatal(i2cerr)
+	}
+	bsbmperr := logger.ChangePackageLogLevel("bsbmp", logger.InfoLevel)
+	if bsbmperr != nil {
+		log.Fatal(bsbmperr)
+	}
 
 	hostname, err := os.Hostname()
 	if err != nil {
