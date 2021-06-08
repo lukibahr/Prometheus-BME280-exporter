@@ -25,4 +25,4 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: lukasbahr/prometheus-bme280-exporter:$GITHUB_SHA
+          tags: lukasbahr/prometheus-bme280-exporter:master
