@@ -3,7 +3,7 @@ version: "3.7"
 services:
 
   exporter:
-    image:
+    image: ghcr.io/lukibahr/Prometheus-BME280-exporter:latest
     build:
       context: .
       dockerfile: Dockerfile
@@ -12,7 +12,7 @@ services:
     container_name: exporter
     restart: always
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      test: ["CMD", "curl", "-f", "http://localhost:9123/health"]
+      interval: 5s
+      timeout: 10s
+      retries: 5      
