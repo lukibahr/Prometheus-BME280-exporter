@@ -1,0 +1,19 @@
+project_name: Prometheus-BME280-exporter
+builds:
+  - env: [CGO_ENABLED=0]
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+      - armv7
+dockers:
+- image_templates: ["ghcr.io/lukibahr/Prometheus-BME280-exporter:{{ .Version }}"]
+  dockerfile: Dockerfile
+  build_flag_templates:
+  - --label=org.opencontainers.image.source=github.com/lukibahr/Prometheus-BME280-exporter
+  - --label=org.opencontainers.image.version={{ .Version }}
+  - --label=org.opencontainers.image.created={{ time "2006-01-02T15:04:05Z07:00" }}
+  - --label=org.opencontainers.image.revision={{ .FullCommit }}
