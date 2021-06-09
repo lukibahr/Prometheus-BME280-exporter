@@ -8,7 +8,7 @@ builds:
     goarch:
       - amd64
       - arm64
-      - armv7
+      - arm
 dockers:
 - image_templates: ["ghcr.io/lukibahr/Prometheus-BME280-exporter:{{ .Version }}"]
   dockerfile: Dockerfile
