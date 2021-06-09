@@ -92,11 +92,11 @@ func (collector *BMECollector) Collect(ch chan<- prometheus.Metric) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	pMg, err := sensor.ReadPressurePa(bsbmp.ACCURACY_STANDARD)
+	pHPa, err := sensor.ReadPressurePa(bsbmp.ACCURACY_STANDARD)
 	if err != nil {
 		log.Fatal(err)
 	}
-	pHPa, err := sensor.ReadPressureMmHg(bsbmp.ACCURACY_STANDARD)
+	pMg, err := sensor.ReadPressureMmHg(bsbmp.ACCURACY_STANDARD)
 	if err != nil {
 		log.Fatal(err)
 	}
