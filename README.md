@@ -26,3 +26,14 @@ A reboot of your Pi is required to take changes effect. Run the exporter with:
 `docker run -it -v /dev/i2c-1:/dev/i2c-1 --privileged -p 9123:9123 lukasbahr/prometheus-bme280-exporter:74b2a86 --loglevel=info` 
 
 The privileged mode is currently required to grant access to the i2c device. Not the best solution but ad-hoc the first working one.
+
+
+### Because Kubernetes is noice
+For a quick-start to run the exporter in a kubernetes cluster, refer to the [kubernetes/daemonset.yaml](kubernetes/daemonset.yaml). The daemonset is configured to run on the nodes of the cluster with a nodeSelector enabled. If you've installed the sensor on all nodes, leave it empty. 
+For a more customizable setup, refer to the helm chart.
+
+
+## Further reading
+
+- Releaser action used for releasing the charts: [https://github.com/helm/chart-releaser-action](https://github.com/helm/chart-releaser-action)
+- Chart releaser used for publishing helm chart: [https://github.com/helm/chart-releaser](https://github.com/helm/chart-releaser)
