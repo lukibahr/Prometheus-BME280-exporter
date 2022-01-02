@@ -11,10 +11,10 @@ include .env
 export
 
 package:
-	$(CR) package $(REPO)
+	$(CR) package charts
 
 upload:
-	$(CR) upload $(REPO)	
+	$(CR) upload charts	
 
 cleanup:
 	rm $(ARTIFACTS)
