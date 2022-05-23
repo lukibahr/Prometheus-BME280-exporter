@@ -10,7 +10,7 @@ VIN, GND, SCL and SDA are the notations on the sensor board of the GYBME280 sens
 
 ## Running the exporter
 
-After you've successfully mounted the sensor, you have to enable the I2C interface. You can either use `sudo raspi-config` or add the following to the `/boot/config.txt
+After you've successfully mounted the sensor, you have to enable the I2C interface. You can either use `sudo raspi-config` and enable it in the UI or add the following to the `/boot/config.txt
 
 ```bash
 pi@raspberrypi ~ $ sudo vim /boot/config.txt`
