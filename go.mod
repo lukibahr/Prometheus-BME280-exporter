@@ -1,6 +1,6 @@
 module github.com/lukibahr/Prometheus-BME280-exporter
 
-go 1.15
+go 1.19
 
 require (
 	github.com/antonfisher/nested-logrus-formatter v1.3.1
