@@ -33,7 +33,7 @@ tasks:
     cmds:
       - |
        GOOS=linux GOARCH=arm GOARM=7 go build
-       GOOS=darwin GOARCH=arm64 go build -ldflags="-X 'github.com/lukibahr/prometheus-bme280-exporter/cmd.buildVersion=v0.0.3' -X 'github.com/lukibahr/prometheus-bme280-exporter/cmd.buildCommit=$(git rev-parse --short HEAD)'" -o release/rclone-daemon-darwin-arm64 main.go
+       GOOS=darwin GOARCH=arm64 go build -ldflags="-X 'github.com/lukibahr/prometheus-bme280-exporter/cmd.buildVersion=v0.0.4' -X 'github.com/lukibahr/prometheus-bme280-exporter/cmd.buildCommit=$(git rev-parse --short HEAD)'" -o release/rclone-daemon-darwin-arm64 main.go
     silent: false
 
   test:
