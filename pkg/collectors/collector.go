@@ -6,7 +6,6 @@ import (
 	"github.com/d2r2/go-bsbmp"
 	"github.com/d2r2/go-i2c"
 	"github.com/d2r2/go-logger"
-	"github.com/lukibahr/Prometheus-BME280-exporter/pkg/config"
 	"github.com/prometheus/client_golang/prometheus"
 	log "github.com/sirupsen/logrus"
 )
@@ -26,23 +25,23 @@ func NewBMECollector() *BMECollector {
 	return &BMECollector{
 		temperature: prometheus.NewDesc("bme280_temperature_celcius",
 			"Returns the measured temperature in celsius",
-			[]string{"sensor_id", "hostname", "environment", "location"}, nil,
+			[]string{"sensor_id", "hostname"}, nil,
 		),
 		humidity: prometheus.NewDesc("bme280_humidity_percent",
 			"Returns the measured humidity in percent",
-			[]string{"sensor_id", "hostname", "environment", "location"}, nil,
+			[]string{"sensor_id", "hostname"}, nil,
 		),
 		pressureMg: prometheus.NewDesc("bme280_pressure_mmHg",
 			"Returns the measured and calculated air pressure in mmHg (millimeter of mercury)",
-			[]string{"sensor_id", "hostname", "environment", "location"}, nil,
+			[]string{"sensor_id", "hostname"}, nil,
 		),
 		pressureHPa: prometheus.NewDesc("bme280_pressure_hpa",
 			"Returns the measured and calculated air pressure in hPA (Pascal)",
-			[]string{"sensor_id", "hostname", "environment", "location"}, nil,
+			[]string{"sensor_id", "hostname"}, nil,
 		),
 		altitude: prometheus.NewDesc("bme280_altitude_meters",
 			"Returns shows the measured altitude in meters above sea level (101325 Pa)",
-			[]string{"sensor_id", "hostname", "environment", "location"}, nil,
+			[]string{"sensor_id", "hostname"}, nil,
 		),
 	}
 }
@@ -111,9 +110,7 @@ func (collector *BMECollector) Collect(ch chan<- prometheus.Metric) {
 			log.Fatal(err)
 		}
 	}
-	location := config.Config.Location
-	environment := config.Config.Environment
-	ch <- prometheus.MustNewConstMetric(collector.temperature, prometheus.GaugeValue, float64(t), string(id), hostname, environment, location)
+	ch <- prometheus.MustNewConstMetric(collector.temperature, prometheus.GaugeValue, float64(t), string(id), hostname)
 	ch <- prometheus.MustNewConstMetric(collector.humidity, prometheus.GaugeValue, float64(h), string(id), hostname)
 	ch <- prometheus.MustNewConstMetric(collector.pressureMg, prometheus.GaugeValue, float64(pMg), string(id), hostname)
 	ch <- prometheus.MustNewConstMetric(collector.pressureHPa, prometheus.GaugeValue, float64(pHPa), string(id), hostname)
