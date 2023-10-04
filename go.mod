@@ -10,5 +10,5 @@ require (
 	github.com/prometheus/client_golang v1.12.2
 	github.com/shiena/ansicolor v0.0.0-20230509054315-a9deabde6e02
 	github.com/sirupsen/logrus v1.7.0
-	github.com/spf13/cobra v1.3.0
+	github.com/spf13/cobra v1.7.0
 )
