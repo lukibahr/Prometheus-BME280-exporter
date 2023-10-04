@@ -51,3 +51,11 @@ For a more customizable setup, refer to the helm chart.
 
 - Releaser action used for releasing the charts: [https://github.com/helm/chart-releaser-action](https://github.com/helm/chart-releaser-action)
 - Chart releaser used for publishing helm chart: [https://github.com/helm/chart-releaser](https://github.com/helm/chart-releaser)
+
+## Rebiulding
+
+- rebuilding with mqtt: <https://github.com/hessu/mqtt-bme280/blob/master/mqtt-bme280.py>
+
+## Open ToDos
+
+- create CI/CD Pipeline with drone

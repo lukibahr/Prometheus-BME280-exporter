@@ -15,6 +15,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var (
+	buildVersion string
+	buildCommit  string
+)
+
 var rootCmd = &cobra.Command{
 	Use:          "prometheus-bme280-exporter",
 	Short:        "Export metrics from a Bosh BME280 sensor",
@@ -28,7 +33,7 @@ var rootCmd = &cobra.Command{
 	},
 }
 
-//Execute runs the toor command
+// Execute runs the toor command
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
 		os.Exit(1)
@@ -36,9 +41,11 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.PersistentFlags().StringP("loglevel", "l", "info", "Sets loglevel")
+	rootCmd.Flags().StringP("loglevel", "l", "info", "Sets loglevel")
 	rootCmd.Flags().StringP("port", "p", "9123", "Sets the port the exporter listens to")
 	rootCmd.Flags().StringP("accuracy", "a", "ACCURACY_STANDARD", "Sets the sampling rate of the metric")
+	rootCmd.Flags().StringP("environment", "e", "dev", "set the environment")
+	rootCmd.Flags().String("location", "local", "sets the location of the exporter")
 }
 
 func setLoglevel(level string) {
@@ -57,8 +64,7 @@ func setLoglevel(level string) {
 }
 
 func runRoot(cmd *cobra.Command) error {
-	c := collectors.NewBMECollector()
-	prometheus.MustRegister(c)
+	log.Infof("prometheus-bme280-exporter version %s, commit %s", buildVersion, buildCommit)
 
 	port, err := cmd.Flags().GetString("port")
 	if err != nil {
@@ -72,8 +78,18 @@ func runRoot(cmd *cobra.Command) error {
 	if err != nil {
 		return err
 	}
-	conf := config.New(port, accuracy, loglevel)
+	environment, err := cmd.Flags().GetString("environment")
+	if err != nil {
+		return err
+	}
+	location, err := cmd.Flags().GetString("location")
+	if err != nil {
+		return err
+	}
+	conf := config.New(port, accuracy, loglevel, environment, location)
 	setLoglevel(conf.Loglevel)
+	c := collectors.NewBMECollector()
+	prometheus.MustRegister(c)
 	http.HandleFunc("/", handlers.IndexHandler)
 	http.HandleFunc("/health", handlers.HealthHandler)
 	http.Handle("/metrics", promhttp.Handler())
