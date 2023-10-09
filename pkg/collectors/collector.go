@@ -1,11 +1,7 @@
 package collectors
 
 import (
-	"github.com/d2r2/go-bsbmp"
-	"github.com/d2r2/go-i2c"
-	"github.com/d2r2/go-logger"
 	"github.com/prometheus/client_golang/prometheus"
-	log "github.com/sirupsen/logrus"
 )
 
 // BMECollector defines the struct for the collector that contains pointers
@@ -55,59 +51,17 @@ func (collector *BMECollector) Describe(ch chan<- *prometheus.Desc) {
 
 // Collect implements required collect function for all prometheus collectors
 func (collector *BMECollector) Collect(ch chan<- prometheus.Metric) {
-	//temporarily used, more a smell than a feature
-	i2cerr := logger.ChangePackageLogLevel("i2c", logger.InfoLevel)
-	if i2cerr != nil {
-		log.Fatal(i2cerr)
-	}
-	bsbmperr := logger.ChangePackageLogLevel("bsbmp", logger.InfoLevel)
-	if bsbmperr != nil {
-		log.Fatal(bsbmperr)
-	}
-
+	sensor := InitSensor()
 	hostname, _ := GetHostname()
+	t := GetSensorTemperature(sensor)
+	pHPa := GetSensorPressurePa(sensor)
+	pMg := GetSensorPressureMmHg(sensor)
+	a := GetSensorAltitude(sensor)
+	h := GetSensorHumidityRH(sensor)
 
-	i, err := i2c.NewI2C(0x76, 1)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer i.Close()
-
-	sensor, err := bsbmp.NewBMP(bsbmp.BME280, i)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	id, err := sensor.ReadSensorID()
-	if err != nil {
-		log.Fatal(err)
-	}
-	log.Debugf("This Bosch Sensortec sensor has signature: 0x%x", id)
-	t, err := sensor.ReadTemperatureC(bsbmp.ACCURACY_STANDARD)
-	if err != nil {
-		log.Fatal(err)
-	}
-	pHPa, err := sensor.ReadPressurePa(bsbmp.ACCURACY_STANDARD)
-	if err != nil {
-		log.Fatal(err)
-	}
-	pMg, err := sensor.ReadPressureMmHg(bsbmp.ACCURACY_STANDARD)
-	if err != nil {
-		log.Fatal(err)
-	}
-	a, err := sensor.ReadAltitude(bsbmp.ACCURACY_STANDARD)
-	if err != nil {
-		log.Fatal(err)
-	}
-	supported, h, err := sensor.ReadHumidityRH(bsbmp.ACCURACY_HIGH)
-	if supported {
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
-	ch <- prometheus.MustNewConstMetric(collector.temperature, prometheus.GaugeValue, float64(t), string(id), hostname)
-	ch <- prometheus.MustNewConstMetric(collector.humidity, prometheus.GaugeValue, float64(h), string(id), hostname)
-	ch <- prometheus.MustNewConstMetric(collector.pressureMg, prometheus.GaugeValue, float64(pMg), string(id), hostname)
-	ch <- prometheus.MustNewConstMetric(collector.pressureHPa, prometheus.GaugeValue, float64(pHPa), string(id), hostname)
-	ch <- prometheus.MustNewConstMetric(collector.altitude, prometheus.GaugeValue, float64(a), string(id), hostname)
+	ch <- prometheus.MustNewConstMetric(collector.temperature, prometheus.GaugeValue, float64(t), hostname)
+	ch <- prometheus.MustNewConstMetric(collector.humidity, prometheus.GaugeValue, float64(h), hostname)
+	ch <- prometheus.MustNewConstMetric(collector.pressureMg, prometheus.GaugeValue, float64(pMg), hostname)
+	ch <- prometheus.MustNewConstMetric(collector.pressureHPa, prometheus.GaugeValue, float64(pHPa), hostname)
+	ch <- prometheus.MustNewConstMetric(collector.altitude, prometheus.GaugeValue, float64(a), hostname)
 }

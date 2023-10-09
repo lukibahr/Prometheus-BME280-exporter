@@ -48,7 +48,7 @@ func init() {
 	rootCmd.Flags().StringP("mqttport", "o", "1883", "set the mqtt broker port")
 	rootCmd.Flags().StringP("mqttusername", "u", "dev", "set the mqtt broker username")
 	rootCmd.Flags().StringP("mqttpassword", "w", "dev", "set the mqtt broker password")
-	rootCmd.Flags().BoolP("mqttenabled", "m", false, "enable or disable mqtt")
+	rootCmd.Flags().StringP("mode", "m", "prometheus", "enable prometheus exporter or mqtt")
 }
 
 func setLoglevel(level string) {
@@ -81,7 +81,7 @@ func runRoot(cmd *cobra.Command) error {
 	if err != nil {
 		return err
 	}
-	mqttenabled, err := cmd.Flags().GetBool("mqttenabled")
+	mode, err := cmd.Flags().GetString("mode")
 	if err != nil {
 		return err
 	}
@@ -104,18 +104,22 @@ func runRoot(cmd *cobra.Command) error {
 
 	conf := config.New(port, accuracy, loglevel, mqttbroker, mqttport, mqttusername, mqttpassword)
 	setLoglevel(conf.Loglevel)
-	c := collectors.NewBMECollector()
-	prometheus.MustRegister(c)
+
 	http.HandleFunc("/", handlers.IndexHandler)
 	http.HandleFunc("/health", handlers.HealthHandler)
-	http.Handle("/metrics", promhttp.Handler())
-
-	if mqttenabled {
+	switch mode {
+	case "prometheus":
+		log.Info("running with mode prometheus to serve as an exporter")
+		c := collectors.NewBMECollector()
+		prometheus.MustRegister(c)
+		http.Handle("/metrics", promhttp.Handler())
+		log.Infof("Running exporter on port :%s", port)
+		log.Fatal(http.ListenAndServe(":"+port, nil))
+	case "mqtt":
+		log.Info("running with mode mqtt")
 		collectors.PubSub(mqttbroker, mqttport, mqttusername, mqttpassword)
 	}
 
-	log.Infof("Running exporter on port :%s", port)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
 	return nil
 
 }
