@@ -54,9 +54,6 @@ func PubSub(mqtt_broker_host, mqtt_broker_port, mqtt_broker_username, mqtt_broke
 	log.Infof("subscribed to topic %s\n", topicPrefix)
 
 	defer client.Disconnect(100)
-
-	// ctx := context.Background()
-
 	go func() {
 		for {
 			sensor := InitSensor()
@@ -69,4 +66,6 @@ func PubSub(mqtt_broker_host, mqtt_broker_port, mqtt_broker_username, mqtt_broke
 
 		}
 	}()
+	// ctx := context.Background()
+
 }
