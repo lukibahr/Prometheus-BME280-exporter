@@ -57,10 +57,9 @@ func PubSub(mqtt_broker_host, mqtt_broker_port, mqtt_broker_username, mqtt_broke
 
 	// ctx := context.Background()
 
-	sensor := InitSensor()
-
 	go func() {
 		for {
+			sensor := InitSensor()
 			temperature := GetSensorTemperature(sensor)
 
 			token = client.Publish(fmt.Sprintf("%s/temperature", topicPrefix), 0, false, temperature)
