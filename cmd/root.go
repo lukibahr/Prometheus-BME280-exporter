@@ -44,8 +44,11 @@ func init() {
 	rootCmd.Flags().StringP("loglevel", "l", "info", "Sets loglevel")
 	rootCmd.Flags().StringP("port", "p", "9123", "Sets the port the exporter listens to")
 	rootCmd.Flags().StringP("accuracy", "a", "ACCURACY_STANDARD", "Sets the sampling rate of the metric")
-	rootCmd.Flags().StringP("environment", "e", "dev", "set the environment")
-	rootCmd.Flags().String("location", "local", "sets the location of the exporter")
+	rootCmd.Flags().StringP("mqttbroker", "b", "localhost", "set the mqtt broker hostname")
+	rootCmd.Flags().StringP("mqttport", "o", "1883", "set the mqtt broker port")
+	rootCmd.Flags().StringP("mqttusername", "u", "dev", "set the mqtt broker username")
+	rootCmd.Flags().StringP("mqttpassword", "w", "dev", "set the mqtt broker password")
+	rootCmd.Flags().BoolP("mqttenabled", "m", false, "enable or disable mqtt")
 }
 
 func setLoglevel(level string) {
@@ -57,7 +60,7 @@ func setLoglevel(level string) {
 	})
 	parsed, err := log.ParseLevel(level)
 	if err != nil {
-		log.Errorf("Invalid loglevel %s", level)
+		log.Errorf("invalid loglevel %s", level)
 	} else {
 		log.SetLevel(parsed)
 	}
@@ -78,21 +81,38 @@ func runRoot(cmd *cobra.Command) error {
 	if err != nil {
 		return err
 	}
-	environment, err := cmd.Flags().GetString("environment")
+	mqttenabled, err := cmd.Flags().GetBool("mqttenabled")
 	if err != nil {
 		return err
 	}
-	location, err := cmd.Flags().GetString("location")
+	mqttbroker, err := cmd.Flags().GetString("mqttbroker")
 	if err != nil {
 		return err
 	}
-	conf := config.New(port, accuracy, loglevel, environment, location)
+	mqttport, err := cmd.Flags().GetString("mqttport")
+	if err != nil {
+		return err
+	}
+	mqttusername, err := cmd.Flags().GetString("mqttusername")
+	if err != nil {
+		return err
+	}
+	mqttpassword, err := cmd.Flags().GetString("mqttpassword")
+	if err != nil {
+		return err
+	}
+
+	conf := config.New(port, accuracy, loglevel, mqttbroker, mqttport, mqttusername, mqttpassword)
 	setLoglevel(conf.Loglevel)
 	c := collectors.NewBMECollector()
 	prometheus.MustRegister(c)
 	http.HandleFunc("/", handlers.IndexHandler)
 	http.HandleFunc("/health", handlers.HealthHandler)
 	http.Handle("/metrics", promhttp.Handler())
+
+	if mqttenabled {
+		collectors.PubSub(mqttbroker, mqttport, mqttusername, mqttpassword)
+	}
 
 	log.Infof("Running exporter on port :%s", port)
 	log.Fatal(http.ListenAndServe(":"+port, nil))

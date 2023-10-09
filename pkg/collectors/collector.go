@@ -1,8 +1,6 @@
 package collectors
 
 import (
-	"os"
-
 	"github.com/d2r2/go-bsbmp"
 	"github.com/d2r2/go-i2c"
 	"github.com/d2r2/go-logger"
@@ -67,10 +65,7 @@ func (collector *BMECollector) Collect(ch chan<- prometheus.Metric) {
 		log.Fatal(bsbmperr)
 	}
 
-	hostname, err := os.Hostname()
-	if err != nil {
-		log.Fatal(err)
-	}
+	hostname, _ := GetHostname()
 
 	i, err := i2c.NewI2C(0x76, 1)
 	if err != nil {
