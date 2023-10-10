@@ -40,11 +40,11 @@ func InitSensor() (*bsbmp.BMP, *i2c.I2C) {
 		log.Fatal(err)
 	}
 
-	// id, err := sensor.ReadSensorID()
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// log.Debugf("This Bosch Sensortec sensor has signature: 0x%x", id)
+	id, err := sensor.ReadSensorID()
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Debugf("This Bosch Sensortec sensor has signature: 0x%x", id)
 	return sensor, i
 }
 
