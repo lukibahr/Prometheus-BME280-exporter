@@ -31,7 +31,7 @@ changelog:
       - Merge pull request
       - Merge branch
 dockers:
-- image_templates: ["ghcr.io/lukibahr/Prometheus-BME280-exporter:{{ .Version }}"]
+- image_templates: ["ghcr.io/lukibahr/prometheus-bme280-exporter:{{ .Version }}"]
   dockerfile: Dockerfile
   build_flag_templates:
   - --label=org.opencontainers.image.source=github.com/lukibahr/Prometheus-BME280-exporter
