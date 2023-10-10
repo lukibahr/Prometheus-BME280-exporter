@@ -11,9 +11,9 @@ builds:
     goos:
       - linux
     goarch:
-      - amd64
-      - arm64
       - arm
+    goarm:
+      - "7"
     binary: prometheus-bme280-exporter
     ldflags:
       - "-X 'github.com/lukibahr/Prometheus-BME280-exporter/cmd.buildVersion={{.Version}}'"
