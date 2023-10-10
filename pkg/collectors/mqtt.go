@@ -56,9 +56,9 @@ func PubSub(mqtt_broker_host, mqtt_broker_port, mqtt_broker_username, mqtt_broke
 	defer client.Disconnect(100)
 	go func() {
 		for {
-			sensor := InitSensor()
+			sensor, intf := InitSensor()
 			temperature := GetSensorTemperature(sensor)
-
+			defer intf.Close()
 			token = client.Publish(fmt.Sprintf("%s/temperature", topicPrefix), 0, false, temperature)
 			token.Wait()
 			log.Infof("sleeping for %d seconds", queuing_interval)
