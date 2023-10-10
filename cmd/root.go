@@ -44,6 +44,7 @@ func init() {
 	rootCmd.Flags().StringP("loglevel", "l", "info", "Sets loglevel")
 	rootCmd.Flags().StringP("port", "p", "9123", "Sets the port the exporter listens to")
 	rootCmd.Flags().StringP("accuracy", "a", "ACCURACY_STANDARD", "Sets the sampling rate of the metric")
+	rootCmd.AddCommand(versionCmd)
 }
 
 func setLoglevel(level string) {
@@ -62,8 +63,6 @@ func setLoglevel(level string) {
 }
 
 func runRoot(cmd *cobra.Command) error {
-	log.Infof("prometheus-bme280-exporter version %s, commit %s", buildVersion, buildCommit)
-
 	port, err := cmd.Flags().GetString("port")
 	if err != nil {
 		return err
@@ -90,4 +89,13 @@ func runRoot(cmd *cobra.Command) error {
 
 	return nil
 
+}
+
+var versionCmd = &cobra.Command{
+	Use:   "version",
+	Short: "version shows the version of the cli tool",
+	Long:  `All software has versions.`,
+	Run: func(cmd *cobra.Command, args []string) {
+		log.Infof("prometheus-bme280-exporter version %s, commit %s", buildVersion, buildCommit)
+	},
 }
