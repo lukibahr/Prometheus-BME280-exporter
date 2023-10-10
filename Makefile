@@ -21,3 +21,9 @@ cleanup:
 
 index:
 	$(CR) index --charts-repo $(GHBASE)$(REPO)
+
+build:
+	go build -o prometheus-bme280-exporter main.go
+
+armv6:
+	CC=arm-linux-gnueabi-gcc GOOS=linux GOARM=6 GOARCH=arm go build -o prometheus-bme280-exporter main.go

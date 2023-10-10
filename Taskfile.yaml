@@ -1,0 +1,44 @@
+# I just wanted to give taskfile.dev another try. This is optional. Get task here https://taskfile.dev/#/
+# Next create a .env file
+ 
+version: '3'
+ 
+vars:
+  GOLANGCILINT:
+    sh: which golangci-lint
+  GOLANG:
+    sh: which go
+ 
+tasks:
+  default:
+    cmds:
+      - task --list
+    silent: true
+ 
+  lint:
+    desc: Run golangci-lint on your sourcecode
+    preconditions:
+      - sh: "[ '{{.GOLANGCILINT}}' != '<no value>' ]"
+        msg: "golangci-lint executable not found"
+    cmds:
+      - |
+       golangci-lint run -v
+    silent: false
+ 
+  build:
+    desc: build binary
+    preconditions:
+      - sh: "[ '{{.GOLANG}}' != '<no value>' ]"
+        msg: "go executable not found"
+    cmds:
+      - |
+       GOOS=linux GOARCH=arm GOARM=7 go build
+       GOOS=darwin GOARCH=arm64 go build -ldflags="-X 'github.com/lukibahr/prometheus-bme280-exporter/cmd.buildVersion=v0.0.4' -X 'github.com/lukibahr/prometheus-bme280-exporter/cmd.buildCommit=$(git rev-parse --short HEAD)'" -o release/rclone-daemon-darwin-arm64 main.go
+    silent: false
+
+  test:
+    desc: Run go test on your sourcecode
+    cmds:
+      - |
+       go test -v
+    silent: false

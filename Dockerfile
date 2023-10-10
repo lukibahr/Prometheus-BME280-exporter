@@ -1,9 +1,7 @@
-FROM golang:1.21-alpine as builder
-WORKDIR /go/src/app
-COPY . /go/src/app
-RUN CGO_ENABLED=0 GOARCH=arm GOARM=7 GOOS=linux go build -a -installsuffix cgo -o /go/bin/exporter .
+# syntax=docker/dockerfile:1
+FROM gcr.io/distroless/base
 
-FROM alpine:3.16
-COPY --from=builder /go/bin/exporter /
-ENTRYPOINT ["/exporter"]
-CMD [""]
+LABEL maintainer="hello@lukasbahr.de"
+
+COPY prometheus-bme280-exporter /usr/bin/prometheus-bme280-exporter
+ENTRYPOINT ["/usr/bin/prometheus-bme280-exporter"]

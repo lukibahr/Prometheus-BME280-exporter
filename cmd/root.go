@@ -15,6 +15,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var (
+	buildVersion string
+	buildCommit  string
+)
+
 var rootCmd = &cobra.Command{
 	Use:          "prometheus-bme280-exporter",
 	Short:        "Export metrics from a Bosh BME280 sensor",
@@ -28,7 +33,7 @@ var rootCmd = &cobra.Command{
 	},
 }
 
-//Execute runs the toor command
+// Execute runs the toor command
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
 		os.Exit(1)
@@ -36,9 +41,10 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.PersistentFlags().StringP("loglevel", "l", "info", "Sets loglevel")
+	rootCmd.Flags().StringP("loglevel", "l", "info", "Sets loglevel")
 	rootCmd.Flags().StringP("port", "p", "9123", "Sets the port the exporter listens to")
 	rootCmd.Flags().StringP("accuracy", "a", "ACCURACY_STANDARD", "Sets the sampling rate of the metric")
+	rootCmd.AddCommand(versionCmd)
 }
 
 func setLoglevel(level string) {
@@ -50,16 +56,13 @@ func setLoglevel(level string) {
 	})
 	parsed, err := log.ParseLevel(level)
 	if err != nil {
-		log.Errorf("Invalid loglevel %s", level)
+		log.Errorf("invalid loglevel %s", level)
 	} else {
 		log.SetLevel(parsed)
 	}
 }
 
 func runRoot(cmd *cobra.Command) error {
-	c := collectors.NewBMECollector()
-	prometheus.MustRegister(c)
-
 	port, err := cmd.Flags().GetString("port")
 	if err != nil {
 		return err
@@ -72,14 +75,27 @@ func runRoot(cmd *cobra.Command) error {
 	if err != nil {
 		return err
 	}
+
 	conf := config.New(port, accuracy, loglevel)
 	setLoglevel(conf.Loglevel)
+
+	c := collectors.NewBMECollector()
+	prometheus.MustRegister(c)
+	http.Handle("/metrics", promhttp.Handler())
 	http.HandleFunc("/", handlers.IndexHandler)
 	http.HandleFunc("/health", handlers.HealthHandler)
-	http.Handle("/metrics", promhttp.Handler())
-
 	log.Infof("Running exporter on port :%s", port)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
+
 	return nil
 
+}
+
+var versionCmd = &cobra.Command{
+	Use:   "version",
+	Short: "version shows the version of the cli tool",
+	Long:  `All software has versions.`,
+	Run: func(cmd *cobra.Command, args []string) {
+		log.Infof("prometheus-bme280-exporter version %s, commit %s", buildVersion, buildCommit)
+	},
 }

@@ -1,12 +1,35 @@
+---
+# This is an example .goreleaser.yml file with some sensible defaults.
+# Make sure to check the documentation at https://goreleaser.com
 project_name: Prometheus-BME280-exporter
+before:
+  hooks:
+    - go mod tidy
 builds:
-  - env: [CGO_ENABLED=0]
+  - env:
+      - CGO_ENABLED=0
     goos:
       - linux
     goarch:
       - amd64
       - arm64
       - arm
+    binary: prometheus-bme280-exporter
+    ldflags:
+      - "-X 'github.com/lukibahr/Prometheus-BME280-exporter/cmd.buildVersion={{.Version}}'"
+      - "-X 'github.com/lukibahr/Prometheus-BME280-exporter/cmd.buildCommit={{.ShortCommit}}'"  
+checksum:
+  name_template: 'checksums.txt'
+snapshot:
+  name_template: "{{ incpatch .Version }}-next"
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - Merge pull request
+      - Merge branch
 dockers:
 - image_templates: ["ghcr.io/lukibahr/Prometheus-BME280-exporter:{{ .Version }}"]
   dockerfile: Dockerfile
@@ -15,3 +38,6 @@ dockers:
   - --label=org.opencontainers.image.version={{ .Version }}
   - --label=org.opencontainers.image.created={{ time "2006-01-02T15:04:05Z07:00" }}
   - --label=org.opencontainers.image.revision={{ .FullCommit }}
+  - --label=org.opencontainers.image.title={{ .ProjectName }}
+  - --label=org.opencontainers.image.description={{ .ProjectName }}
+  - --label=org.opencontainers.image.url=https://github.com/lukibahr/prometheus-bme280-exporter

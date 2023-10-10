@@ -7,7 +7,7 @@ type Config struct {
 }
 
 // New creates a new Config object
-func New(port string, accuracy, loglevel string) *Config {
+func New(port, accuracy, loglevel string) *Config {
 	return &Config{
 		Port:     port,
 		Accuracy: accuracy,
