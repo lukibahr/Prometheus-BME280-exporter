@@ -16,8 +16,8 @@ builds:
       - arm
     binary: prometheus-bme280-exporter
     ldflags:
-      - "-X 'github.com/lukibahr/prometheus-bme280-exporter/cmd.buildVersion={{.Version}}'"
-      - "-X 'github.com/lukibahr/prometheus-bme280-exporter/cmd.buildCommit={{.ShortCommit}}'"  
+      - "-X 'github.com/lukibahr/Prometheus-BME280-exporter/cmd.buildVersion={{.Version}}'"
+      - "-X 'github.com/lukibahr/Prometheus-BME280-exporter/cmd.buildCommit={{.ShortCommit}}'"  
 checksum:
   name_template: 'checksums.txt'
 snapshot:
