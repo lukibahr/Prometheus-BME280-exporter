@@ -51,14 +51,14 @@ func (collector *BMECollector) Describe(ch chan<- *prometheus.Desc) {
 
 // Collect implements required collect function for all prometheus collectors
 func (collector *BMECollector) Collect(ch chan<- prometheus.Metric) {
-	sensor := InitSensor()
+	sensor, intf := InitSensor()
 	hostname, _ := GetHostname()
 	t := GetSensorTemperature(sensor)
 	pHPa := GetSensorPressurePa(sensor)
 	pMg := GetSensorPressureMmHg(sensor)
 	a := GetSensorAltitude(sensor)
 	h := GetSensorHumidityRH(sensor)
-
+	defer intf.Close()
 	ch <- prometheus.MustNewConstMetric(collector.temperature, prometheus.GaugeValue, float64(t), hostname)
 	ch <- prometheus.MustNewConstMetric(collector.humidity, prometheus.GaugeValue, float64(h), hostname)
 	ch <- prometheus.MustNewConstMetric(collector.pressureMg, prometheus.GaugeValue, float64(pMg), hostname)

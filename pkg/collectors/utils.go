@@ -19,7 +19,7 @@ func GetHostname() (string, error) {
 	return hostname, nil
 }
 
-func InitSensor() *bsbmp.BMP {
+func InitSensor() (*bsbmp.BMP, *i2c.I2C) {
 	// temporarily used, more a smell than a feature
 	i2cerr := logger.ChangePackageLogLevel("i2c", logger.InfoLevel)
 	if i2cerr != nil {
@@ -34,7 +34,6 @@ func InitSensor() *bsbmp.BMP {
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer i.Close()
 
 	sensor, err := bsbmp.NewBMP(bsbmp.BME280, i)
 	if err != nil {
@@ -46,7 +45,7 @@ func InitSensor() *bsbmp.BMP {
 	// 	log.Fatal(err)
 	// }
 	// log.Debugf("This Bosch Sensortec sensor has signature: 0x%x", id)
-	return sensor
+	return sensor, i
 }
 
 func GetSensorTemperature(sensor *bsbmp.BMP) float32 {
