@@ -11,7 +11,7 @@ require (
 	github.com/eclipse/paho.mqtt.golang v1.4.3
 	github.com/lukibahr/windhager-biowin2t-client-go v0.0.4
 	github.com/prometheus/client_golang v1.12.2
-	github.com/shiena/ansicolor v0.0.0-20230509054315-a9deabde6e02
+	github.com/shiena/ansicolor v0.1
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/cobra v1.7.0
 	github.com/spf13/viper v1.16.0
